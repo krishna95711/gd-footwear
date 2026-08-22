@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { getProductById, Product } from '@/lib/db';
 import { useCart } from '@/context/CartContext';
-import { ShieldCheck, ArrowLeft, Plus, Minus, ShoppingCart, MessageSquare, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ShieldCheck, ArrowLeft, Plus, Minus, ShoppingCart, MessageSquare, ChevronLeft, ChevronRight, Send } from 'lucide-react';
 import Link from 'next/link';
 
 interface ProductPageProps {
@@ -78,30 +78,6 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
     setTimeout(() => setAddedMessage(false), 3000);
   };
 
-  const handleDirectWhatsAppBuy = () => {
-    if (selectedSize === null || selectedColor === null) {
-      alert('Please choose a size and color.');
-      return;
-    }
-
-    const origin = typeof window !== 'undefined' ? window.location.origin : '';
-    
-    let message = `*GD Footwear - Fast Order Inquiry*\n\n`;
-    message += `I am interested in buying:\n`;
-    message += `Product: *${product.name}*\n`;
-    message += `Size: *${selectedSize}*\n`;
-    message += `Color: *${selectedColor}*\n`;
-    message += `Quantity: *${quantity}*\n`;
-    message += `Price: *₹${(product.price * quantity).toFixed(2)}*\n`;
-    if (origin) {
-      message += `Link: ${origin}/product/${product.id}\n`;
-    }
-    message += `\nPlease confirm availability! Thank you.`;
-
-    const encoded = encodeURIComponent(message);
-    const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '9530150967';
-    window.open(`https://wa.me/${whatsappNumber}?text=${encoded}`, '_blank');
-  };
 
   return (
     <div className="bg-white pb-16">
@@ -269,10 +245,10 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
                   Add to Shopping Cart
                 </button>
                 <button
-                  onClick={handleDirectWhatsAppBuy}
-                  className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-green-600 text-green-600 hover:bg-green-50 font-bold py-3.5 px-6 transition-all"
+                  onClick={handleAddToCart}
+                  className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-primary-600 text-primary-600 hover:bg-primary-50 font-bold py-3.5 px-6 transition-all"
                 >
-                  <MessageSquare className="h-5 w-5" />
+                  <Send className="h-5 w-5" />
                   Order Instantly
                 </button>
               </div>
