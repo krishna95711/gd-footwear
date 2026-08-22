@@ -21,6 +21,8 @@ export interface Product {
   description: string;
   price: number;
   image_url: string;
+  image_url_2?: string;
+  image_url_3?: string;
   category: string;
   sizes: number[];
   colors: string[];
@@ -36,6 +38,8 @@ const DEFAULT_PRODUCTS: Product[] = [
     description: 'Exquisitely handcrafted traditional Punjabi Jutti adorned with intricate gold zari embroidery. Made from soft premium genuine leather that molds to your feet for unmatched comfort. Perfect for weddings, festivals, and traditional attire.',
     price: 1899.00,
     image_url: 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=600&auto=format&fit=crop&q=80',
+    image_url_2: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop&q=80',
+    image_url_3: 'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&auto=format&fit=crop&q=80',
     category: 'Jutti',
     sizes: [36, 37, 38, 39, 40, 41],
     colors: ['Golden', 'Red', 'Silver'],
@@ -48,6 +52,8 @@ const DEFAULT_PRODUCTS: Product[] = [
     description: 'Chic and comfortable velvet finish ladies flat belli shoes with soft cushioned footbed. Features elegant slip-on styling and robust grip rubber soles for comfortable day-long wear. Complements both casual and office wardrobes.',
     price: 999.00,
     image_url: 'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&auto=format&fit=crop&q=80',
+    image_url_2: 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=600&auto=format&fit=crop&q=80',
+    image_url_3: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop&q=80',
     category: 'Ladies_belli',
     sizes: [35, 36, 37, 38, 39, 40],
     colors: ['Black', 'Pink', 'Peach'],
@@ -60,6 +66,8 @@ const DEFAULT_PRODUCTS: Product[] = [
     description: 'Handcrafted male loafers in high-grade supple leather featuring seamless stitching and Ortholite breathable insoles. Effortlessly stylish option perfect for business meetings, semi-formal get-togethers, or daily elegant walkouts.',
     price: 2499.00,
     image_url: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop&q=80',
+    image_url_2: 'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&auto=format&fit=crop&q=80',
+    image_url_3: 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=600&auto=format&fit=crop&q=80',
     category: 'Male_shoes',
     sizes: [40, 41, 42, 43, 44, 45],
     colors: ['Tan Brown', 'Dark Charcoal', 'Classic Black'],
@@ -105,21 +113,7 @@ export async function getProducts(): Promise<Product[]> {
         return getLocalProducts();
       }
 
-      if (data && data.length > 0) {
-        return data as Product[];
-      }
-      
-      // If Supabase database is connected but table is empty, insert default products
-      const { data: inserted, error: insertError } = await supabase
-        .from('products')
-        .insert(DEFAULT_PRODUCTS.map(({ id, ...rest }) => rest)) // let Postgres auto-generate or use defaults
-        .select();
-
-      if (!insertError && inserted) {
-        return inserted as Product[];
-      }
-      
-      return data as Product[];
+      return (data || []) as Product[];
     } catch (e) {
       console.error('Supabase query exception, falling back to local:', e);
       return getLocalProducts();
@@ -195,19 +189,33 @@ export async function uploadImage(file: File): Promise<string> {
 }
 
 export async function createProduct(
-  productData: Omit<Product, 'id' | 'created_at' | 'image_url'>,
+  productData: Omit<Product, 'id' | 'created_at' | 'image_url' | 'image_url_2' | 'image_url_3'>,
   imageFile: File | null,
-  imageUrlStr?: string
+  imageUrlStr?: string,
+  imageFile2?: File | null,
+  imageUrlStr2?: string,
+  imageFile3?: File | null,
+  imageUrlStr3?: string
 ): Promise<Product> {
   let image_url = imageUrlStr || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop&q=80';
+  let image_url_2 = imageUrlStr2 || '';
+  let image_url_3 = imageUrlStr3 || '';
 
   if (imageFile) {
     image_url = await uploadImage(imageFile);
+  }
+  if (imageFile2) {
+    image_url_2 = await uploadImage(imageFile2);
+  }
+  if (imageFile3) {
+    image_url_3 = await uploadImage(imageFile3);
   }
 
   const newProduct = {
     ...productData,
     image_url,
+    ...(image_url_2 ? { image_url_2 } : {}),
+    ...(image_url_3 ? { image_url_3 } : {}),
     created_at: new Date().toISOString()
   };
 
@@ -241,19 +249,37 @@ export async function createProduct(
 
 export async function updateProduct(
   id: string,
-  productData: Partial<Omit<Product, 'id' | 'created_at' | 'image_url'>>,
+  productData: Partial<Omit<Product, 'id' | 'created_at' | 'image_url' | 'image_url_2' | 'image_url_3'>>,
   imageFile: File | null,
-  imageUrlStr?: string
+  imageUrlStr?: string,
+  imageFile2?: File | null,
+  imageUrlStr2?: string,
+  imageFile3?: File | null,
+  imageUrlStr3?: string
 ): Promise<Product | null> {
   let image_url = imageUrlStr;
+  let image_url_2 = imageUrlStr2;
+  let image_url_3 = imageUrlStr3;
 
   if (imageFile) {
     image_url = await uploadImage(imageFile);
+  }
+  if (imageFile2) {
+    image_url_2 = await uploadImage(imageFile2);
+  }
+  if (imageFile3) {
+    image_url_3 = await uploadImage(imageFile3);
   }
 
   const updateFields: Partial<Product> = { ...productData };
   if (image_url) {
     updateFields.image_url = image_url;
+  }
+  if (image_url_2 !== undefined) {
+    updateFields.image_url_2 = image_url_2;
+  }
+  if (image_url_3 !== undefined) {
+    updateFields.image_url_3 = image_url_3;
   }
 
   if (supabase) {

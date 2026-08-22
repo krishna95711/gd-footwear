@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { getProductById, Product } from '@/lib/db';
 import { useCart } from '@/context/CartContext';
-import { ShieldCheck, ArrowLeft, Plus, Minus, ShoppingCart, MessageSquare } from 'lucide-react';
+import { ShieldCheck, ArrowLeft, Plus, Minus, ShoppingCart, MessageSquare, ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
 interface ProductPageProps {
@@ -22,6 +22,7 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [addedMessage, setAddedMessage] = useState(false);
+  const [activeImageIdx, setActiveImageIdx] = useState(0);
 
   useEffect(() => {
     async function load() {
@@ -113,13 +114,61 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-10">
-          {/* Left Column: Image */}
-          <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-gray-50 border border-gray-100 shadow-sm max-h-[500px]">
-            <img
-              src={product.image_url}
-              alt={product.name}
-              className="h-full w-full object-cover object-center"
-            />
+          {/* Left Column: Image Gallery with Interactive Slider & Thumbnails */}
+          <div className="flex flex-col gap-4">
+            {/* Active Image Slider Container */}
+            <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-gray-50 border border-gray-100 shadow-sm max-h-[480px] group">
+              <img
+                src={[product.image_url, product.image_url_2, product.image_url_3].filter(Boolean)[activeImageIdx] as string}
+                alt={`${product.name} - View ${activeImageIdx + 1}`}
+                className="h-full w-full object-cover object-center transition-all duration-300"
+              />
+              
+              {/* Previous & Next Arrow Overlays (only show if multiple images exist) */}
+              {[product.image_url, product.image_url_2, product.image_url_3].filter(Boolean).length > 1 && (
+                <>
+                  <button
+                    onClick={() => {
+                      const len = [product.image_url, product.image_url_2, product.image_url_3].filter(Boolean).length;
+                      setActiveImageIdx((prev) => (prev - 1 + len) % len);
+                    }}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/80 hover:bg-white text-gray-800 shadow backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                    title="Previous Image"
+                  >
+                    <ChevronLeft className="h-5 w-5" />
+                  </button>
+                  <button
+                    onClick={() => {
+                      const len = [product.image_url, product.image_url_2, product.image_url_3].filter(Boolean).length;
+                      setActiveImageIdx((prev) => (prev + 1) % len);
+                    }}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/80 hover:bg-white text-gray-800 shadow backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                    title="Next Image"
+                  >
+                    <ChevronRight className="h-5 w-5" />
+                  </button>
+                </>
+              )}
+            </div>
+
+            {/* Thumbnail Navigation Row */}
+            {[product.image_url, product.image_url_2, product.image_url_3].filter(Boolean).length > 1 && (
+              <div className="flex gap-3 justify-center md:justify-start">
+                {[product.image_url, product.image_url_2, product.image_url_3].filter(Boolean).map((img, idx) => (
+                  <button
+                    key={`thumbnail-${idx}`}
+                    onClick={() => setActiveImageIdx(idx)}
+                    className={`h-16 w-16 rounded-xl border-2 overflow-hidden bg-gray-50 transition-all ${
+                      activeImageIdx === idx
+                        ? 'border-primary-600 ring-2 ring-primary-100 scale-105'
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <img src={img as string} alt="" className="h-full w-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Right Column: Details */}

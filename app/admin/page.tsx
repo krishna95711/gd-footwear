@@ -43,9 +43,21 @@ export default function AdminDashboard() {
   const [sizesInput, setSizesInput] = useState('39, 40, 41, 42, 43, 44');
   const [colorsInput, setColorsInput] = useState('White, Black, Gray');
   const [isFeatured, setIsFeatured] = useState(false);
+  
+  // Image 1 states
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUrlStr, setImageUrlStr] = useState('');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  // Image 2 states
+  const [imageFile2, setImageFile2] = useState<File | null>(null);
+  const [imageUrlStr2, setImageUrlStr2] = useState('');
+  const [imagePreview2, setImagePreview2] = useState<string | null>(null);
+
+  // Image 3 states
+  const [imageFile3, setImageFile3] = useState<File | null>(null);
+  const [imageUrlStr3, setImageUrlStr3] = useState('');
+  const [imagePreview3, setImagePreview3] = useState<string | null>(null);
 
   // Auth verification
   useEffect(() => {
@@ -91,9 +103,22 @@ export default function AdminDashboard() {
     setSizesInput('39, 40, 41, 42, 43, 44');
     setColorsInput('White, Black, Gray');
     setIsFeatured(false);
+    
+    // Reset Image 1
     setImageFile(null);
     setImageUrlStr('');
     setImagePreview(null);
+    
+    // Reset Image 2
+    setImageFile2(null);
+    setImageUrlStr2('');
+    setImagePreview2(null);
+
+    // Reset Image 3
+    setImageFile3(null);
+    setImageUrlStr3('');
+    setImagePreview3(null);
+
     setIsModalOpen(true);
   };
 
@@ -106,9 +131,22 @@ export default function AdminDashboard() {
     setSizesInput(product.sizes.join(', '));
     setColorsInput(product.colors.join(', '));
     setIsFeatured(product.is_featured);
+
+    // Image 1 Map
     setImageFile(null);
     setImageUrlStr(product.image_url);
     setImagePreview(product.image_url);
+
+    // Image 2 Map
+    setImageFile2(null);
+    setImageUrlStr2(product.image_url_2 || '');
+    setImagePreview2(product.image_url_2 || null);
+
+    // Image 3 Map
+    setImageFile3(null);
+    setImageUrlStr3(product.image_url_3 || '');
+    setImagePreview3(product.image_url_3 || null);
+
     setIsModalOpen(true);
   };
 
@@ -120,6 +158,32 @@ export default function AdminDashboard() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleImageChange2 = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile2(file);
+      setImageUrlStr2('');
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview2(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleImageChange3 = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile3(file);
+      setImageUrlStr3('');
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview3(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -177,7 +241,16 @@ export default function AdminDashboard() {
     try {
       if (editingId) {
         // Update product
-        const updated = await updateProduct(editingId, productPayload, imageFile, imageUrlStr || undefined);
+        const updated = await updateProduct(
+          editingId,
+          productPayload,
+          imageFile,
+          imageUrlStr || undefined,
+          imageFile2,
+          imageUrlStr2 || undefined,
+          imageFile3,
+          imageUrlStr3 || undefined
+        );
         if (updated) {
           alert('Footwear updated successfully!');
           setIsModalOpen(false);
@@ -187,7 +260,15 @@ export default function AdminDashboard() {
         }
       } else {
         // Create product
-        const created = await createProduct(productPayload, imageFile, imageUrlStr || undefined);
+        const created = await createProduct(
+          productPayload,
+          imageFile,
+          imageUrlStr || undefined,
+          imageFile2,
+          imageUrlStr2 || undefined,
+          imageFile3,
+          imageUrlStr3 || undefined
+        );
         if (created) {
           alert('Footwear added to catalog successfully!');
           setIsModalOpen(false);
@@ -495,32 +576,25 @@ export default function AdminDashboard() {
                     />
                   </div>
 
-                  {/* Image Upload Selection */}
-                  <div className="space-y-3">
-                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-500">
-                      Footwear Image Upload *
+                  {/* Image 1 Upload Selection */}
+                  <div className="p-4 rounded-xl border border-gray-100 bg-gray-50/50 space-y-3">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-600">
+                      Main Product Image *
                     </label>
                     <div className="flex flex-col gap-2">
                       <div className="flex items-center justify-center w-full">
-                        <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-200 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors relative overflow-hidden">
+                        <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-gray-200 border-dashed rounded-lg cursor-pointer bg-white hover:bg-gray-50 transition-colors relative overflow-hidden">
                           {imagePreview ? (
                             <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
                           ) : (
-                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                              <FileImage className="w-8 h-8 text-gray-400 mb-2" />
-                              <p className="text-xs font-semibold text-gray-500">Click to upload image file</p>
-                              <p className="text-[10px] text-gray-400 mt-1">PNG, JPG or WebP (max 4MB)</p>
+                            <div className="flex flex-col items-center justify-center pt-2 pb-3">
+                              <FileImage className="w-6 h-6 text-gray-400 mb-1" />
+                              <p className="text-[10px] font-bold text-gray-500">Upload Main Image File</p>
                             </div>
                           )}
                           <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
                         </label>
                       </div>
-
-                      <div className="relative">
-                        <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-200" /></div>
-                        <div className="relative flex justify-center text-xs"><span className="bg-white px-2 text-gray-400 font-semibold">OR Manual URL</span></div>
-                      </div>
-
                       <input
                         type="text"
                         value={imageUrlStr}
@@ -531,8 +605,78 @@ export default function AdminDashboard() {
                             setImagePreview(e.target.value);
                           }
                         }}
-                        placeholder="Paste image URL (e.g. Unsplash URL)"
-                        className="block w-full rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-primary-500 text-gray-800"
+                        placeholder="Or paste main image URL"
+                        className="block w-full rounded-lg border border-gray-200 px-3 py-2 text-xs outline-none focus:border-primary-500 text-gray-800 bg-white"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Image 2 Upload Selection */}
+                  <div className="p-4 rounded-xl border border-gray-100 bg-gray-50/50 space-y-3">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-600">
+                      Angle 2 Image (Optional)
+                    </label>
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center justify-center w-full">
+                        <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-gray-200 border-dashed rounded-lg cursor-pointer bg-white hover:bg-gray-50 transition-colors relative overflow-hidden">
+                          {imagePreview2 ? (
+                            <img src={imagePreview2} alt="Preview" className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="flex flex-col items-center justify-center pt-2 pb-3">
+                              <FileImage className="w-6 h-6 text-gray-400 mb-1" />
+                              <p className="text-[10px] font-bold text-gray-500">Upload Angle 2 Image</p>
+                            </div>
+                          )}
+                          <input type="file" accept="image/*" className="hidden" onChange={handleImageChange2} />
+                        </label>
+                      </div>
+                      <input
+                        type="text"
+                        value={imageUrlStr2}
+                        onChange={(e) => {
+                          setImageUrlStr2(e.target.value);
+                          if (e.target.value) {
+                            setImageFile2(null);
+                            setImagePreview2(e.target.value);
+                          }
+                        }}
+                        placeholder="Or paste angle 2 image URL"
+                        className="block w-full rounded-lg border border-gray-200 px-3 py-2 text-xs outline-none focus:border-primary-500 text-gray-800 bg-white"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Image 3 Upload Selection */}
+                  <div className="p-4 rounded-xl border border-gray-100 bg-gray-50/50 space-y-3">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-600">
+                      Angle 3 Image (Optional)
+                    </label>
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center justify-center w-full">
+                        <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-gray-200 border-dashed rounded-lg cursor-pointer bg-white hover:bg-gray-50 transition-colors relative overflow-hidden">
+                          {imagePreview3 ? (
+                            <img src={imagePreview3} alt="Preview" className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="flex flex-col items-center justify-center pt-2 pb-3">
+                              <FileImage className="w-6 h-6 text-gray-400 mb-1" />
+                              <p className="text-[10px] font-bold text-gray-500">Upload Angle 3 Image</p>
+                            </div>
+                          )}
+                          <input type="file" accept="image/*" className="hidden" onChange={handleImageChange3} />
+                        </label>
+                      </div>
+                      <input
+                        type="text"
+                        value={imageUrlStr3}
+                        onChange={(e) => {
+                          setImageUrlStr3(e.target.value);
+                          if (e.target.value) {
+                            setImageFile3(null);
+                            setImagePreview3(e.target.value);
+                          }
+                        }}
+                        placeholder="Or paste angle 3 image URL"
+                        className="block w-full rounded-lg border border-gray-200 px-3 py-2 text-xs outline-none focus:border-primary-500 text-gray-800 bg-white"
                       />
                     </div>
                   </div>
