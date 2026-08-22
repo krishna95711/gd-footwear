@@ -318,18 +318,27 @@ export async function updateProduct(
 export async function deleteProduct(id: string): Promise<boolean> {
   if (supabase) {
     try {
-      // First get the product details to delete its image if possible
+      // First get the product details to delete its images if possible
       const product = await getProductById(id);
-      if (product && product.image_url.includes('product-images')) {
-        try {
-          // Extract file path from public URL
-          const urlParts = product.image_url.split('/product-images/');
-          if (urlParts.length > 1) {
-            const filePath = urlParts[1];
-            await supabase.storage.from('product-images').remove([filePath]);
+      if (product) {
+        const filesToDelete: string[] = [];
+        const imageUrls = [product.image_url, product.image_url_2, product.image_url_3].filter(Boolean) as string[];
+        
+        for (const url of imageUrls) {
+          if (url.includes('product-images')) {
+            const urlParts = url.split('/product-images/');
+            if (urlParts.length > 1) {
+              filesToDelete.push(urlParts[1]);
+            }
           }
-        } catch (storageErr) {
-          console.error('Failed to delete image file from Supabase Storage:', storageErr);
+        }
+
+        if (filesToDelete.length > 0) {
+          try {
+            await supabase.storage.from('product-images').remove(filesToDelete);
+          } catch (storageErr) {
+            console.error('Failed to delete image files from Supabase Storage:', storageErr);
+          }
         }
       }
 

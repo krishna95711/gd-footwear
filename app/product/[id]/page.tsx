@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { getProductById, Product } from '@/lib/db';
 import { useCart } from '@/context/CartContext';
-import { ShieldCheck, ArrowLeft, Plus, Minus, ShoppingCart, MessageSquare, ChevronLeft, ChevronRight, Send } from 'lucide-react';
+import { ShieldCheck, ArrowLeft, Plus, Minus, ShoppingCart, MessageSquare, ChevronLeft, ChevronRight, Send, Ruler, X } from 'lucide-react';
 import Link from 'next/link';
 
 interface ProductPageProps {
@@ -23,6 +23,7 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
   const [quantity, setQuantity] = useState(1);
   const [addedMessage, setAddedMessage] = useState(false);
   const [activeImageIdx, setActiveImageIdx] = useState(0);
+  const [showSizeChart, setShowSizeChart] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -194,7 +195,17 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
               {/* Size Select */}
               {product.sizes && product.sizes.length > 0 && (
                 <div className="border-t border-gray-100 pt-5">
-                  <h3 className="text-xs font-bold text-gray-400 tracking-wider uppercase mb-3">Select Size (EU)</h3>
+                  <div className="flex justify-between items-center mb-3">
+                    <h3 className="text-xs font-bold text-gray-400 tracking-wider uppercase">Select Size (Indian / UK)</h3>
+                    <button
+                      type="button"
+                      onClick={() => setShowSizeChart(true)}
+                      className="text-xs text-primary-600 hover:text-primary-700 font-bold flex items-center gap-1"
+                    >
+                      <Ruler className="h-3.5 w-3.5" />
+                      Size Chart
+                    </button>
+                  </div>
                   <div className="flex flex-wrap gap-2">
                     {product.sizes.map((size) => (
                       <button
@@ -267,6 +278,112 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
           </div>
         </div>
       </div>
+
+      {/* Sizing Chart Modal */}
+      {showSizeChart && (
+        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div className="fixed inset-0 bg-black/50 transition-opacity" onClick={() => setShowSizeChart(false)} />
+
+          {/* Modal Container */}
+          <div className="relative transform overflow-hidden rounded-2xl bg-white p-6 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-gray-100 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-4 mb-4">
+              <h3 className="text-lg font-bold text-gray-950 flex items-center gap-2">
+                <Ruler className="h-5 w-5 text-primary-600" />
+                GD Footwear Sizing Chart
+              </h3>
+              <button
+                onClick={() => setShowSizeChart(false)}
+                className="p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-500 transition-colors"
+                title="Close"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <p className="text-xs text-gray-500 mb-4">
+              We use standard <strong>Indian / UK Sizing</strong>. Refer to the matrix comparison below to find your perfect fit!
+            </p>
+
+            {/* Sizing Comparison Table */}
+            <div className="overflow-x-auto rounded-xl border border-gray-100 mb-6">
+              <table className="min-w-full divide-y divide-gray-100 text-xs text-left text-gray-500">
+                <thead className="bg-gray-50 font-bold text-gray-500 uppercase">
+                  <tr>
+                    <th scope="col" className="px-3 py-3">Indian / UK</th>
+                    <th scope="col" className="px-3 py-3">US Size</th>
+                    <th scope="col" className="px-3 py-3">Euro (EU)</th>
+                    <th scope="col" className="px-3 py-3">Foot Length (cm)</th>
+                    <th scope="col" className="px-3 py-3">Inches</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100 bg-white font-semibold text-gray-700">
+                  <tr className="hover:bg-gray-50/50">
+                    <td className="px-3 py-2.5 font-bold text-primary-600">Size 5</td>
+                    <td className="px-3 py-2.5">6</td>
+                    <td className="px-3 py-2.5">38</td>
+                    <td className="px-3 py-2.5">24.1 cm</td>
+                    <td className="px-3 py-2.5">9.5"</td>
+                  </tr>
+                  <tr className="hover:bg-gray-50/50">
+                    <td className="px-3 py-2.5 font-bold text-primary-600">Size 6</td>
+                    <td className="px-3 py-2.5">7</td>
+                    <td className="px-3 py-2.5">39 / 40</td>
+                    <td className="px-3 py-2.5">25.0 cm</td>
+                    <td className="px-3 py-2.5">9.8"</td>
+                  </tr>
+                  <tr className="hover:bg-gray-50/50">
+                    <td className="px-3 py-2.5 font-bold text-primary-600">Size 7</td>
+                    <td className="px-3 py-2.5">8</td>
+                    <td className="px-3 py-2.5">41</td>
+                    <td className="px-3 py-2.5">25.7 cm</td>
+                    <td className="px-3 py-2.5">10.1"</td>
+                  </tr>
+                  <tr className="hover:bg-gray-50/50">
+                    <td className="px-3 py-2.5 font-bold text-primary-600">Size 8</td>
+                    <td className="px-3 py-2.5">9</td>
+                    <td className="px-3 py-2.5">42</td>
+                    <td className="px-3 py-2.5">26.5 cm</td>
+                    <td className="px-3 py-2.5">10.4"</td>
+                  </tr>
+                  <tr className="hover:bg-gray-50/50">
+                    <td className="px-3 py-2.5 font-bold text-primary-600">Size 9</td>
+                    <td className="px-3 py-2.5">10</td>
+                    <td className="px-3 py-2.5">43</td>
+                    <td className="px-3 py-2.5">27.3 cm</td>
+                    <td className="px-3 py-2.5">10.7"</td>
+                  </tr>
+                  <tr className="hover:bg-gray-50/50">
+                    <td className="px-3 py-2.5 font-bold text-primary-600">Size 10</td>
+                    <td className="px-3 py-2.5">11</td>
+                    <td className="px-3 py-2.5">44</td>
+                    <td className="px-3 py-2.5">28.1 cm</td>
+                    <td className="px-3 py-2.5">11.0"</td>
+                  </tr>
+                  <tr className="hover:bg-gray-50/50">
+                    <td className="px-3 py-2.5 font-bold text-primary-600">Size 11</td>
+                    <td className="px-3 py-2.5">12</td>
+                    <td className="px-3 py-2.5">45</td>
+                    <td className="px-3 py-2.5">29.0 cm</td>
+                    <td className="px-3 py-2.5">11.4"</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            {/* How to measure guide */}
+            <div className="bg-gray-50 rounded-xl p-4 border border-gray-100 space-y-2">
+              <h4 className="text-xs font-bold text-gray-950 uppercase tracking-wider">How to Measure Your Foot Length:</h4>
+              <ol className="list-decimal pl-4 text-xs text-gray-600 space-y-1.5 font-medium">
+                <li>Place a sheet of paper on the floor flat against a wall.</li>
+                <li>Stand on the paper with your heel lightly touching the wall.</li>
+                <li>Mark the tip of your longest toe on the paper with a pencil.</li>
+                <li>Measure the distance from the edge of the paper to your mark using a ruler (in cm or inches) and compare it with our chart above!</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

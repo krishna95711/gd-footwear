@@ -70,7 +70,7 @@ export default function Storefront() {
               Step Into Style & Comfort
             </h1>
             <p className="text-base text-gray-300">
-              Explore premium footwear engineered for maximum durability, speed, and luxury. Order instantly via WhatsApp. Zero logins. Zero complications.
+              Explore premium footwear engineered for maximum durability, speed, and luxury. Order instantly. Zero logins. Zero complications.
             </p>
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-2">
               <button
@@ -82,12 +82,6 @@ export default function Storefront() {
               >
                 Browse Catalog
               </button>
-              <Link
-                href="/admin"
-                className="rounded-md border border-gray-700 bg-gray-800/50 px-5 py-3 text-sm font-semibold text-gray-300 hover:text-white hover:bg-gray-800"
-              >
-                Admin Panel &rarr;
-              </Link>
             </div>
           </div>
           <div className="relative w-full max-w-sm aspect-square md:max-w-md hidden md:block">

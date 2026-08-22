@@ -65,13 +65,13 @@ export default function AdminDashboard() {
       try {
         const res = await fetch('/api/admin/check');
         if (!res.ok) {
-          router.push('/admin/login');
+          router.push('/adminadmin957/login');
         } else {
           setCheckingAuth(false);
           loadProducts();
         }
       } catch (err) {
-        router.push('/admin/login');
+        router.push('/adminadmin957/login');
       }
     }
     verify();
@@ -87,7 +87,7 @@ export default function AdminDashboard() {
   const handleLogout = async () => {
     try {
       await fetch('/api/admin/logout', { method: 'POST' });
-      router.push('/admin/login');
+      router.push('/adminadmin957/login');
       router.refresh();
     } catch (e) {
       console.error('Logout failed:', e);

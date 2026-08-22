@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
-import { ShoppingBag, Menu, X, ShieldAlert, Footprints } from 'lucide-react';
+import { ShoppingBag, Menu, X, Footprints } from 'lucide-react';
 
 export default function Header() {
   const { cartCount, setIsCartOpen } = useCart();
@@ -38,13 +38,6 @@ export default function Header() {
             </div>
           </div>
           <div className="ml-10 flex items-center space-x-4">
-            <Link
-              href="/admin"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-primary-600 bg-gray-50 hover:bg-primary-50 px-3 py-1.5 rounded-full transition-all border border-gray-100"
-            >
-              <ShieldAlert className="h-3.5 w-3.5" />
-              Admin Portal
-            </Link>
             <button
               onClick={() => setIsCartOpen(true)}
               className="group relative flex items-center justify-center p-2 rounded-full hover:bg-gray-100 transition-all"

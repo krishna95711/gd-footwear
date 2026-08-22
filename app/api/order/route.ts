@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     let fields = items.map((item: any, index: number) => {
       return {
         name: `📦 Item ${index + 1}: ${item.productName}`,
-        value: `• **Category:** ${item.category}\n• **Size:** EU ${item.size}\n• **Color:** ${item.color}\n• **Qty:** ${item.quantity} x ₹${item.price.toFixed(2)}\n• **Subtotal:** ₹${(item.price * item.quantity).toFixed(2)}\n• [View Product](${item.productLink})`,
+        value: `• **Category:** ${item.category}\n• **Size:** Indian ${item.size}\n• **Color:** ${item.color}\n• **Qty:** ${item.quantity} x ₹${item.price.toFixed(2)}\n• **Subtotal:** ₹${(item.price * item.quantity).toFixed(2)}\n• [View Product](${item.productLink})`,
         inline: false
       };
     });

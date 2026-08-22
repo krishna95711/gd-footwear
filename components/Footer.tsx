@@ -32,7 +32,7 @@ export default function Footer() {
               </span>
               <div>
                 <h3 className="text-sm font-semibold text-white">Premium Support</h3>
-                <p className="mt-1 text-xs text-gray-400">Need help? Text us anytime on WhatsApp for personalized size advice.</p>
+                <p className="mt-1 text-xs text-gray-400">Need help? Contact us anytime for personalized size advice.</p>
               </div>
             </div>
           </div>
@@ -52,7 +52,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-sm text-gray-400 max-w-sm">
-              Premium quality footwear delivered straight to your door. No registration, no checkout hurdles. Simple selection, instant WhatsApp order.
+              Premium quality footwear delivered straight to your door. No registration, no checkout hurdles. Simple selection, instant online order.
             </p>
           </div>
           <div>
@@ -66,7 +66,7 @@ export default function Footer() {
           <div>
             <h3 className="text-sm font-semibold text-white tracking-wider uppercase">Order Processing</h3>
             <p className="mt-4 text-sm text-gray-400">
-              Just add your shoes, pick your color and size, and send your cart summary straight to our team over WhatsApp. We'll handle payment and delivery directly!
+              Just add your shoes, pick your color and size, and submit your checkout details. Our team will handle payment and delivery directly!
             </p>
           </div>
         </div>

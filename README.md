@@ -10,7 +10,7 @@ It features a secure **Admin Dashboard** to upload footwear images directly, spe
 
 - **Frictionless Shopping**: Customers do not need to sign up or log in. They can immediately add products to their shopping cart.
 - **Instant WhatsApp Checkout**: The checkout system compiles a detailed, styled receipt with selected shoe models, quantities, EU sizes, and colors, then forwards it straight to your WhatsApp business line.
-- **Admin Catalog Manager**: A password-protected panel `/admin` to list, publish, update, and delete footwear items.
+- **Admin Catalog Manager**: A password-protected panel `/adminadmin957` to list, publish, update, and delete footwear items.
 - **Cloud Image Uploads**: Upload shoe images directly from your computer. Supports auto-saving to Cloud storage.
 - **Sandbox Fallback (Zero Config!)**: Out of the box, if no database is configured, the application automatically runs in a secure sandbox mode using your browser's `localStorage` for database storage and converts uploaded images to base64, letting you test and use the site instantly!
 - **1-Click Free Hosting**: Fully optimized for **Vercel** serverless environments.
@@ -35,7 +35,7 @@ It features a secure **Admin Dashboard** to upload footwear images directly, spe
 
 ## 🔐 Administrator Access
 
-To manage the catalog, visit `/admin` and sign in.
+To manage the catalog, visit `/adminadmin957` and sign in.
 
 - **Default Local Password**: `admin123`
 - To customize your secure password, set the `ADMIN_PASSWORD` environment variable (see below).
