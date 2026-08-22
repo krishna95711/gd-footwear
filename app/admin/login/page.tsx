@@ -118,25 +118,6 @@ export default function AdminLoginPage() {
             </div>
           </form>
 
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="bg-white px-2 text-gray-400 font-medium">Default Access</span>
-              </div>
-            </div>
-
-            <div className="mt-4 text-center">
-              <p className="text-xs text-gray-500">
-                Local testing password is <code className="font-mono bg-gray-50 text-primary-600 px-1.5 py-0.5 rounded border border-gray-100">admin123</code>.
-              </p>
-              <p className="text-[10px] text-gray-400 mt-2">
-                Configure <code className="font-mono">ADMIN_PASSWORD</code> in your environment to change it.
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </div>

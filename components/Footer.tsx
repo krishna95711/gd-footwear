@@ -72,7 +72,6 @@ export default function Footer() {
         </div>
         <div className="mt-12 border-t border-gray-800 pt-8 text-center text-xs text-gray-500">
           <p>&copy; {new Date().getFullYear()} GD Footwear. All rights reserved.</p>
-          <p className="mt-2 text-[10px] text-gray-600">Admin password: <span className="italic font-mono">admin123</span> (change in your env configuration)</p>
         </div>
       </div>
     </footer>
